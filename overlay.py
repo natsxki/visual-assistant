@@ -188,11 +188,15 @@ class PromptBar:
 
         sw = root.winfo_screenwidth()
         bar_h = 64
+        bottom_margin = 80
+
 
         self.win = tk.Toplevel(root)
         self.win.overrideredirect(True)
-        self.win.geometry(f"{sw}x{bar_h}+0+{root.winfo_screenheight() - bar_h}")
+        self.win.geometry(f"{sw}x{bar_h}+0+{root.winfo_screenheight() - bar_h - bottom_margin}")
         self.win.attributes("-topmost", True)
+        self.win.lift()
+        self.win.focus_force()
         self.win.config(bg=BAR_BG)
 
         # top border line
