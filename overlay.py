@@ -74,8 +74,9 @@ class OverlayWindow:
         self.win.overrideredirect(True)
         self.win.geometry(f"{sw}x{sh}+0+0")
         self.win.attributes("-topmost", True)
-        self.win.attributes("-transparentcolor", OVERLAY_BG)
-        self.win.config(bg=OVERLAY_BG)
+        self.win.attributes("-transparent", True)
+        self.win.attributes("-alpha", 0.3)
+        self.win.config(bg="systemTransparent")
 
         # Make it click-through on macOS via wm_attributes
         # (tkinter doesn't expose NSWindow directly, so we layer a canvas

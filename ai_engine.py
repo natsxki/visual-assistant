@@ -10,7 +10,7 @@ import os
 import json
 import re
 import base64
-import google.generativeai as genai
+from google import genai
 
 
 SYSTEM_PROMPT = SYSTEM_PROMPT = """
@@ -46,7 +46,7 @@ def query_ai_for_steps(question: str, screenshot_b64: str, app_name: str) -> lis
 
     genai.configure(api_key=api_key)
 
-    model = genai.GenerativeModel("gemini-1.5-pro")
+    client = genai.Client(api_key=api_key)
 
     image_bytes = base64.b64decode(screenshot_b64)
 
@@ -57,7 +57,9 @@ Question: {question}
 Return the step array now.
 """
 
-    response = model.generate_content([
+    response = client.models.generate_content(
+    model="gemini-1.5-pro",
+    contents=[
         SYSTEM_PROMPT,
         prompt,
         {
