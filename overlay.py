@@ -9,6 +9,11 @@ import json
 from capture import capture_active_window
 from ai_engine import query_ai_for_steps
 
+from PIL import Image
+import base64
+import io
+from vision import extract_text_regions, find_best_match
+
 
 # ── colour palette ──────────────────────────────────────────────
 OVERLAY_BG   = "#000000"      # will be made transparent
@@ -254,13 +259,38 @@ class PromptBar:
 
     def _run_query(self, question: str):
         try:
-            self.status.config(text="Analysing…")
             screenshot_b64, app_name = capture_active_window()
+
+            # Decode image for OCR
+            img_bytes = base64.b64decode(screenshot_b64)
+            pil_img = Image.open(io.BytesIO(img_bytes))
+
+            # Extract UI text regions
+            regions = extract_text_regions(pil_img)
 
             self.status.config(text="Asking AI…")
             steps = query_ai_for_steps(question, screenshot_b64, app_name)
 
-            self.root.after(0, lambda: self._on_result(steps))
+            # Convert AI steps → real coordinates
+            converted_steps = []
+
+            for step in steps:
+                target = step.get("target", "")
+                match = find_best_match(target, regions)
+
+                if match:
+                    converted_steps.append({
+                        "kind": "highlight",
+                        "label": step["label"],
+                        "region": {
+                            "x": match["x"],
+                            "y": match["y"],
+                            "w": match["w"],
+                            "h": match["h"]
+                        }
+                    })
+
+            self.root.after(0, lambda: self._on_result(converted_steps))
         except Exception as e:
             self.root.after(0, lambda: self._on_error(str(e)))
 

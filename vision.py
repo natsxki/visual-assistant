@@ -42,3 +42,21 @@ def extract_text_regions(pil_image):
             })
 
     return results
+
+def find_best_match(target, regions):
+    target = target.lower()
+
+    best = None
+    best_score = 0
+
+    for r in regions:
+        text = r["text"].lower()
+
+        if target in text or text in target:
+            score = len(text)
+
+            if score > best_score:
+                best = r
+                best_score = score
+
+    return best
