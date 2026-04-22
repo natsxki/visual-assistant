@@ -1,0 +1,45 @@
+# ==========================================
+# Variables d'environnement & Secrets 
+# ==========================================
+.env
+.env.local
+.env.*
+*.pem
+
+# ==========================================
+# Dossiers virtuels Python 
+# ==========================================
+venv/
+.venv/
+env/
+ENV/
+
+# ==========================================
+# Fichiers de cache Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# Caches des outils (Tests, Linting, etc.)
+# ==========================================
+.pytest_cache/
+.coverage
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# Fichiers de configuration des éditeurs (IDE)
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==========================================
+# Fichiers système (macOS, Windows)
+# ==========================================
+.DS_Store
+Thumbs.db
